@@ -6,7 +6,16 @@ A **ReAct-style coding agent** where a **large** NVIDIA NIM model plans and edit
 
 ### Component diagram
 
-![System architecture — task runner, orchestrator, tools, NVIDIA models, metrics](Architecture/Architecture.png)
+<!-- Absolute URL: GitHub's README viewer sometimes fails on relative images when the default branch or fork root differs. Relative path still works when browsing files on a branch. -->
+<p align="center">
+  <img
+    src="https://raw.githubusercontent.com/Aivar-sanjeev/Coding-Agent-with-Context-Optimised-Architecture/main/Architecture/Architecture.png"
+    alt="System architecture: task runner, orchestrator, tools, NVIDIA models, metrics"
+    width="920"
+  />
+</p>
+
+Same file in-repo (for local/offline viewers): [`Architecture/Architecture.png`](Architecture/Architecture.png)
 
 ### Mermaid (text form, same topology)
 
