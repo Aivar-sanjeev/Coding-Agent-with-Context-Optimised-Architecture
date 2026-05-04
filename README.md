@@ -4,21 +4,6 @@ A **ReAct-style coding agent** where a **large** NVIDIA NIM model plans and edit
 
 ## Architecture
 
-### Component diagram
-
-<!-- Absolute URL: GitHub's README viewer sometimes fails on relative images when the default branch or fork root differs. Relative path still works when browsing files on a branch. -->
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/Aivar-sanjeev/Coding-Agent-with-Context-Optimised-Architecture/main/Architecture/Architecture.png"
-    alt="System architecture: task runner, orchestrator, tools, NVIDIA models, metrics"
-    width="920"
-  />
-</p>
-
-Same file in-repo (for local/offline viewers): [`Architecture/Architecture.png`](Architecture/Architecture.png)
-
-### Mermaid (text form, same topology)
-
 ```mermaid
 flowchart TB
   subgraph inputs
@@ -61,32 +46,6 @@ flowchart TB
     RT["eval/run_table.py\nbaseline + dual runs"]
   end
   RT --> TR
-```
-
-**ReAct loop (orchestrator)** — one turn:
-
-```mermaid
-sequenceDiagram
-  participant O as orchestrator
-  participant L as large model
-  participant D as dispatch_tool
-  participant T as tools
-
-  O->>L: chat(messages, tools)
-  alt assistant returns tool_calls
-    L-->>O: tool_calls[]
-    loop each tool
-      O->>D: dispatch(name, args)
-      D->>T: file_ops / shell / small_model / …
-      T-->>D: JSON result
-      D-->>O: result
-      O->>O: append role=tool
-    end
-    O->>L: next chat turn
-  else assistant returns text only
-    L-->>O: content (no tools)
-    O->>O: stop or continue per policy
-  end
 ```
 
 ## Requirements
