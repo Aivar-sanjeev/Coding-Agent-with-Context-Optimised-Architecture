@@ -2,6 +2,84 @@
 
 A **ReAct-style coding agent** where a **large** NVIDIA NIM model plans and edits, and a **small** model runs as a **tool** to shrink bulky text (logs, large files, traces) into structured JSON so the orchestrator’s context stays small.
 
+## Architecture
+
+### Component diagram
+
+![System architecture — task runner, orchestrator, tools, NVIDIA models, metrics](Architecture/Architecture.png)
+
+### Mermaid (text form, same topology)
+
+```mermaid
+flowchart TB
+  subgraph inputs
+    SPEC["tasks/specs/*.json"]
+    WS["benchmarks/workspaces/*"]
+  end
+
+  SPEC --> TR["tasks/task_runner"]
+  TR -->|"prepare_command (optional)"| WS
+  TR --> OR["agent/orchestrator\nReAct loop"]
+  OR --> CFG["config.py\nSettings"]
+
+  subgraph nvidia["NVIDIA OpenAI-compatible API"]
+    LM["Large model\nchat.completions"]
+    SM["Small model\nchat.completions"]
+  end
+
+  OR -->|"messages + tools"| LM
+  LM -->|"tool_calls or text"| OR
+
+  OR --> DISP["agent/tools.py\ndispatch_tool"]
+  DISP --> FT["agent/file_tools\nread / write / search / patch / shell"]
+  DISP --> SMT["agent/small_model_tool\n( dual mode only )"]
+  FT --> WS
+  SMT -->|"raw content or path"| FT
+  SMT --> SM
+  SM -->|"structured JSON"| DISP
+  FT --> DISP
+
+  OR --> MET["eval/metrics.py\nMetricsSession"]
+  LM --> MET
+  SM --> MET
+
+  DISP -->|"finish"| OR
+  OR --> TR
+  TR --> VER["verify_command\ne.g. pytest -q"]
+  VER --> WS
+
+  subgraph evalharness["Evaluation"]
+    RT["eval/run_table.py\nbaseline + dual runs"]
+  end
+  RT --> TR
+```
+
+**ReAct loop (orchestrator)** — one turn:
+
+```mermaid
+sequenceDiagram
+  participant O as orchestrator
+  participant L as large model
+  participant D as dispatch_tool
+  participant T as tools
+
+  O->>L: chat(messages, tools)
+  alt assistant returns tool_calls
+    L-->>O: tool_calls[]
+    loop each tool
+      O->>D: dispatch(name, args)
+      D->>T: file_ops / shell / small_model / …
+      T-->>D: JSON result
+      D-->>O: result
+      O->>O: append role=tool
+    end
+    O->>L: next chat turn
+  else assistant returns text only
+    L-->>O: content (no tools)
+    O->>O: stop or continue per policy
+  end
+```
+
 ## Requirements
 
 - Python 3.10+ (3.11+ recommended)
