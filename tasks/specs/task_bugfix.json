@@ -1,0 +1,6 @@
+{
+  "id": "bugfix_auth_middleware",
+  "workspace": "../../benchmarks/workspaces/ws_bugfix",
+  "prompt": "Pytest fails in this workspace. Fix production code (not tests) so tests pass. The failure is subtle and may involve middleware-style header shaping. After fixing, run pytest from the workspace root and call finish with success only if pytest exits 0.\n\nConstraints: keep public behavior of app.router.handle the same except for the bugfix.",
+  "verify_command": ["python", "-m", "pytest", "-q"]
+}

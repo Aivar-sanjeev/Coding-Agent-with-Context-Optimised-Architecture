@@ -1,0 +1,6 @@
+{
+  "id": "refactor_order_processing",
+  "workspace": "../../benchmarks/workspaces/ws_refactor",
+  "prompt": "Refactor app/orders.py: extract process_order into smaller helper functions (at least 3 private helpers) while preserving behavior exactly. Update any internal structure as needed but keep process_order as the public entrypoint with the same signature and outputs. Run pytest -q from workspace root; call finish with success only if tests pass.",
+  "verify_command": ["python", "-m", "pytest", "-q"]
+}

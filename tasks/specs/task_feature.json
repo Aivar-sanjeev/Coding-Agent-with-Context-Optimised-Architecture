@@ -1,0 +1,6 @@
+{
+  "id": "feature_health_endpoint",
+  "workspace": "../../benchmarks/workspaces/ws_feature",
+  "prompt": "Implement GET /health in app/router.py handle() returning status 200 and a short body indicating the service is healthy (include the substring 'ok'). Do not add third-party frameworks. Run pytest from workspace root; call finish with success only if pytest exits 0.",
+  "verify_command": ["python", "-m", "pytest", "-q"]
+}
