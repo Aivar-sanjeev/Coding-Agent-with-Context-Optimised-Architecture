@@ -101,8 +101,8 @@ Span = **author time** on the **root** commit of `main` → **author time** on *
 | | |
 |---|---|
 | **First commit** (root of `main`) | `2719a1a` — **2026-05-04 05:36:40 UTC** |
-| **Latest commit** (`main` tip) | `066bf3d` — **2026-05-04 06:26:54 UTC** |
-| **Elapsed (root → tip)** | **50 min 14 s** (3,014 s) across **10** commits on `main` |
+| **Latest commit** (`main` tip) | `d63f68b` — **2026-05-04 06:38:56 UTC** |
+| **Elapsed (root → tip)** | **1 h 2 m 16 s** (3,736 s) across **11** commits on `main` |
 
 Recompute from a clone (PowerShell, repo root):
 
