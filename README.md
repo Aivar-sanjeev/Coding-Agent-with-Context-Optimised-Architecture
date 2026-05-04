@@ -90,29 +90,34 @@ Runs all specs in both modes (six agent runs — uses API quota):
 python -m eval.run_table
 ```
 
-## Benchmark tasks (models, timing, tech stack)
+## Run metadata (models, duration, tech stack)
 
-Each `python -m tasks.task_runner …` run now includes **`models_used`**, **`tech_stack_used`**, and **`timing`** (`started_at_utc`, `finished_at_utc`, `wall_duration_total_s`, `agent_loop_duration_s`) in the printed JSON—use them to fill the tables below.
+**Repository:** [github.com/Aivar-sanjeev/Coding-Agent-with-Context-Optimised-Architecture](https://github.com/Aivar-sanjeev/Coding-Agent-with-Context-Optimised-Architecture)
 
-**Tech stack (all tasks):** Python 3, OpenAI Python SDK, NVIDIA NIM (OpenAI-compatible API), pytest, python-dotenv.
+After each `python -m tasks.task_runner …` or `python -m eval.run_table`, fill **Started / Finished (UTC)** and **Wall duration** from your shell (`Get-Date -Format u`) or wrap commands with `Measure-Command`. **Models** come from `.env` (`LARGE_MODEL`, `SMALL_MODEL`).
 
-### Aggregate log (all tasks × modes)
+### Tech stack
 
-| Task ID | Mode | Large model | Small model | Wall (s) | Agent loop (s) | Started (UTC) | Finished (UTC) | Success |
-|---------|------|-------------|-------------|----------|----------------|---------------|------------------|---------|
-| `bugfix_auth_middleware` | dual | `meta/llama-3.1-70b-instruct` † | `meta/llama-3.1-8b-instruct` † | — | — | — | — | — |
-| `bugfix_auth_middleware` | baseline | same † | same † | — | — | — | — | — |
-| `feature_health_endpoint` | dual | same † | same † | — | — | — | — | — |
-| `feature_health_endpoint` | baseline | same † | same † | — | — | — | — | — |
-| `refactor_order_processing` | dual | same † | same † | — | — | — | — | — |
-| `refactor_order_processing` | baseline | same † | same † | — | — | — | — | — |
+Python 3, **OpenAI Python SDK** (NVIDIA `integrate.api.nvidia.com`), **python-dotenv**, **pytest** (workspace verification).
 
-† Defaults from **`.env.example`**; your runs use **`LARGE_MODEL` / `SMALL_MODEL`** from **`.env`**. Replace `—` after each run from JSON.
+### Models used (from `.env`)
 
-**Per-workspace READMEs** (same columns, scoped to one benchmark):  
-[`benchmarks/workspaces/ws_bugfix/README.md`](benchmarks/workspaces/ws_bugfix/README.md) · [`ws_feature`](benchmarks/workspaces/ws_feature/README.md) · [`ws_refactor`](benchmarks/workspaces/ws_refactor/README.md)
+| Variable | Example | Notes |
+|----------|---------|--------|
+| `LARGE_MODEL` | `meta/llama-3.1-70b-instruct` | Orchestrator ReAct loop. |
+| `SMALL_MODEL` | `meta/llama-3.1-8b-instruct` | `small_model_tool` only in **dual** mode. |
 
-**Canonical table file (copy for reports):** [`tasks/BENCHMARK_RESULTS.md`](tasks/BENCHMARK_RESULTS.md) · **Task runner docs:** [`tasks/README.md`](tasks/README.md) · **Benchmarks overview:** [`benchmarks/README.md`](benchmarks/README.md)
+### Benchmark task log (fill per run)
+
+| Task ID | Mode | Command | Models used | Tech stack | Started (UTC) | Finished (UTC) | Wall duration |
+|---------|------|---------|-------------|------------|---------------|----------------|-----------------|
+| `bugfix_auth_middleware` | dual | `python -m tasks.task_runner tasks/specs/task_bugfix.json dual` | `LARGE_MODEL` + `SMALL_MODEL` | stack above | — | — | — |
+| `bugfix_auth_middleware` | baseline | `python -m tasks.task_runner tasks/specs/task_bugfix.json baseline` | `LARGE_MODEL` only | stack above | — | — | — |
+| `feature_health_endpoint` | dual | `… task_feature.json dual` | same | same | — | — | — |
+| `feature_health_endpoint` | baseline | `… task_feature.json baseline` | same | same | — | — | — |
+| `refactor_order_processing` | dual | `… task_refactor.json dual` | same | same | — | — | — |
+| `refactor_order_processing` | baseline | `… task_refactor.json baseline` | same | same | — | — | — |
+| Full table (6 runs) | both | `python -m eval.run_table` | same | same | — | — | — |
 
 ## Project layout
 
@@ -128,9 +133,6 @@ Each `python -m tasks.task_runner …` run now includes **`models_used`**, **`te
 | `eval/metrics.py` | Token/cost/session metrics + markdown table helper |
 | `eval/run_table.py` | Batch baseline + dual runs |
 | `benchmarks/workspaces/*` | Small multi-file workspaces for bugfix / feature / refactor |
-| `benchmarks/README.md` | Benchmark harness + workspace index |
-| `tasks/README.md` | Task specs, runner fields, links to results log |
-| `tasks/BENCHMARK_RESULTS.md` | Editable table: models, timing, success for all runs |
 | `WRITEUP.md` | Framing + design notes for reports |
 
 ## Task spec format (`tasks/specs/*.json`)
