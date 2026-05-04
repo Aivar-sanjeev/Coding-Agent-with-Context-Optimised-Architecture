@@ -94,7 +94,26 @@ python -m eval.run_table
 
 **Repository:** [github.com/Aivar-sanjeev/Coding-Agent-with-Context-Optimised-Architecture](https://github.com/Aivar-sanjeev/Coding-Agent-with-Context-Optimised-Architecture)
 
-After each `python -m tasks.task_runner …` or `python -m eval.run_table`, fill **Started / Finished (UTC)** and **Wall duration** from your shell (`Get-Date -Format u`) or wrap commands with `Measure-Command`. **Models** come from `.env` (`LARGE_MODEL`, `SMALL_MODEL`).
+### Project duration (`main`: first commit → latest)
+
+Span = **author time** on the **root** commit of `main` → **author time** on **`main` @ HEAD** (not calendar “project weeks”; rerun after you merge new work).
+
+| | |
+|---|---|
+| **First commit** (root of `main`) | `2719a1a` — **2026-05-04 05:36:40 UTC** |
+| **Latest commit** (`main` tip) | `066bf3d` — **2026-05-04 06:26:54 UTC** |
+| **Elapsed (root → tip)** | **50 min 14 s** (3,014 s) across **10** commits on `main` |
+
+Recompute from a clone (PowerShell, repo root):
+
+```powershell
+$root = git rev-list --max-parents=0 main; $head = git rev-parse main
+$t0 = [int](git show -s --format=%at $root); $t1 = [int](git show -s --format=%at $head)
+$ts = [TimeSpan]::FromSeconds($t1 - $t0)
+"Elapsed: {0}d {1}h {2}m {3}s  (commits: {4})" -f $ts.Days, $ts.Hours, $ts.Minutes, $ts.Seconds, (git rev-list --count main)
+```
+
+After each `python -m tasks.task_runner …` or `python -m eval.run_table`, fill **Started / Finished (UTC)** and **Wall duration** in the tables below from your shell (`Get-Date -Format u`) or `Measure-Command`. **Models** come from `.env` (`LARGE_MODEL`, `SMALL_MODEL`).
 
 ### Tech stack
 
