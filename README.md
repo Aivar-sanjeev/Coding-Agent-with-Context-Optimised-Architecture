@@ -90,6 +90,30 @@ Runs all specs in both modes (six agent runs — uses API quota):
 python -m eval.run_table
 ```
 
+## Benchmark tasks (models, timing, tech stack)
+
+Each `python -m tasks.task_runner …` run now includes **`models_used`**, **`tech_stack_used`**, and **`timing`** (`started_at_utc`, `finished_at_utc`, `wall_duration_total_s`, `agent_loop_duration_s`) in the printed JSON—use them to fill the tables below.
+
+**Tech stack (all tasks):** Python 3, OpenAI Python SDK, NVIDIA NIM (OpenAI-compatible API), pytest, python-dotenv.
+
+### Aggregate log (all tasks × modes)
+
+| Task ID | Mode | Large model | Small model | Wall (s) | Agent loop (s) | Started (UTC) | Finished (UTC) | Success |
+|---------|------|-------------|-------------|----------|----------------|---------------|------------------|---------|
+| `bugfix_auth_middleware` | dual | `meta/llama-3.1-70b-instruct` † | `meta/llama-3.1-8b-instruct` † | — | — | — | — | — |
+| `bugfix_auth_middleware` | baseline | same † | same † | — | — | — | — | — |
+| `feature_health_endpoint` | dual | same † | same † | — | — | — | — | — |
+| `feature_health_endpoint` | baseline | same † | same † | — | — | — | — | — |
+| `refactor_order_processing` | dual | same † | same † | — | — | — | — | — |
+| `refactor_order_processing` | baseline | same † | same † | — | — | — | — | — |
+
+† Defaults from **`.env.example`**; your runs use **`LARGE_MODEL` / `SMALL_MODEL`** from **`.env`**. Replace `—` after each run from JSON.
+
+**Per-workspace READMEs** (same columns, scoped to one benchmark):  
+[`benchmarks/workspaces/ws_bugfix/README.md`](benchmarks/workspaces/ws_bugfix/README.md) · [`ws_feature`](benchmarks/workspaces/ws_feature/README.md) · [`ws_refactor`](benchmarks/workspaces/ws_refactor/README.md)
+
+**Canonical table file (copy for reports):** [`tasks/BENCHMARK_RESULTS.md`](tasks/BENCHMARK_RESULTS.md) · **Task runner docs:** [`tasks/README.md`](tasks/README.md) · **Benchmarks overview:** [`benchmarks/README.md`](benchmarks/README.md)
+
 ## Project layout
 
 | Path | Role |
@@ -104,6 +128,9 @@ python -m eval.run_table
 | `eval/metrics.py` | Token/cost/session metrics + markdown table helper |
 | `eval/run_table.py` | Batch baseline + dual runs |
 | `benchmarks/workspaces/*` | Small multi-file workspaces for bugfix / feature / refactor |
+| `benchmarks/README.md` | Benchmark harness + workspace index |
+| `tasks/README.md` | Task specs, runner fields, links to results log |
+| `tasks/BENCHMARK_RESULTS.md` | Editable table: models, timing, success for all runs |
 | `WRITEUP.md` | Framing + design notes for reports |
 
 ## Task spec format (`tasks/specs/*.json`)

@@ -36,11 +36,18 @@ def main() -> int:
             except Exception as e:
                 out = {"success": False, "error": repr(e), "metrics": {}}
             m = out.get("metrics") or {}
+            timing = out.get("timing") or {}
+            models = out.get("models_used") or {}
             rows.append(
                 {
                     "task": spec.stem,
                     "mode": mode,
                     "success": out.get("success", False),
+                    "large_model": models.get("large", ""),
+                    "small_model": models.get("small", ""),
+                    "wall_total_s": timing.get("wall_duration_total_s", ""),
+                    "started_utc": timing.get("started_at_utc", ""),
+                    "finished_utc": timing.get("finished_at_utc", ""),
                     "large_input_tokens": m.get("total_input_tokens_large", ""),
                     "large_output_tokens": m.get("total_output_tokens_large", ""),
                     "small_in": m.get("total_input_tokens_small", ""),
